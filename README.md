@@ -4,6 +4,7 @@
 My experiments in CP/M 8080 assembly language programming using MASM-80 on a Z80 emulator running CP/M 2.2
 ## RUN CP/M
 This a Windows 10 emulator for a CP/M system from the 1970s or early 1980s - written by Greg at [sydneysmith.com](https://www.sydneysmith.com/wordpress/run-cpm/)
+![CP/M screen](https://github.com/ifknot/CPM-Playground/blob/main/images/run-cpm.png)
 
 You can:
 + Start an entire computer system with one double-click.
