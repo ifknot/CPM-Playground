@@ -1,0 +1,40 @@
+;
+.8080
+NAME ('STDIO')
+TITLE C-like macros for the I/O subroutines
+
+; Writes a character to the CP/M logical device CON:
+; Parameters:
+;	ch - ASCII byte character to be written
+; Return value:
+; 	On success, returns the written character.
+;	On failure, returns EOF
+putchar		MACRO 	ch
+			MVI		A, ch
+			CALL	PCHR##
+			ENDM
+
+; Sets up a user stack of specified size	
+; Parameters:
+;	size - the numbers of bytes to reserve for the user stack space
+; Return value:
+; 	The SP register now points to the top of the user stack
+setstack 	MACRO size
+			DSEG					; data segment 
+			DS		size			; uninitialized stack space	
+TOPSTACK:	DB		0				; top of the user stack
+			CSEG					; code segment
+			LXI		SP, TOPSTACK	; set up the user's stack 
+			ENDM
+			
+; Exits back to the command-line processor (CCP) 
+; Parameters:
+;	err - an error code or 0 on success
+; Return value:
+; 	The err value is converted to ASCI and sent to CON:
+exit		MACRO 	err
+			MVI 	A, err
+			ADI 	'0'				; convert to ASCII
+			CALL 	PCHR##
+			JMP		REBOOT##
+			ENDM
