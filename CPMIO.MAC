@@ -1,0 +1,20 @@
+.8080
+NAME	('CPMIO')
+TITLE	CP/M I/O subroutines 04 October 2022
+CSEG
+SUBTTL	print ASCII character in register A to console
+PCHR::		PUSH	BC
+			PUSH 	DE
+			PUSH	HL
+			
+			MVI		C, WCONF##
+			MOV		E, A
+			CALL	BDOS##
+			
+			POP		HL
+			POP		DE
+			POP		BC
+			
+			RET			
+			END
+			

@@ -1,0 +1,18 @@
+.8080
+NAME ('IOMACROS')
+TITLE macros for the I/O subroutines
+
+; print the character chr to the console
+mPCHAR		MACRO chr
+				MVI		A, chr
+				CALL	PCHR##
+			ENDM
+
+; make a user stack of specified size	
+mUSTACK 	MACRO size
+				DSEG
+					DS		size			
+USTACK:				DB		0	
+				CSEG
+					LXI		SP, USTACK		; set up the user's stack 
+			ENDM
