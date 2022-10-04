@@ -1,5 +1,5 @@
 # CP/M-Playground
-![retro-pc]()
+![retro-pc](https://github.com/ifknot/CPM-Playground/blob/main/images/vector-graphics-vector-3-128x128.png)
 
 My experiments in CP/M 8080 assembly language programming using MASM-80 on a Z80 emulator running CP/M 2.2
 ## RUN CP/M
@@ -11,6 +11,8 @@ You can:
 + Run original software in its original environment.
 + Copy files in and out of the environment (with the cpmfs tool).
 + Change disks at any point.
+
+[My repository for minimal RUN CP/M and instructions](https://github.com/ifknot/CPM-emulator)
 
 ## MASM-80 Microsoft Utility Software:
 + MACRO-80 Assembler
