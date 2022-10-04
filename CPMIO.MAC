@@ -1,10 +1,9 @@
 ; 
-.8080
-NAME	('CPMIO')
+.8080						; accept only 8080 opcodes
+NAME	('CPMIO')			; set the module name (overrides title) *only the first 6 characters are significant*
 TITLE	CP/M I/O subroutines 04 October 2022
-CSEG
 SUBTTL	print ASCII character in register A to console
-
+CSEG						; code segment relocatable code
 PCHR::		PUSH	BC		; preserve registers
 			PUSH 	DE		
 

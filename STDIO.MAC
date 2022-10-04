@@ -6,7 +6,7 @@ TITLE C-like macros for the I/O subroutines
 ; Writes a character to the CP/M logical device CON:
 ; Parameters:
 ;	ch - ASCII byte character to be written
-; Return value:
+; Return value in A register:
 ; 	On success, returns the written character.
 ;	On failure, returns EOF
 putchar		MACRO 	ch
@@ -20,10 +20,10 @@ putchar		MACRO 	ch
 ; Return value:
 ; 	The SP register now points to the top of the user stack
 setstack 	MACRO size
-			DSEG					; data segment 
+			DSEG					; data segment relocatable code
 			DS		size			; uninitialized stack space	
 TOPSTACK:	DB		0				; top of the user stack
-			CSEG					; code segment
+			CSEG					; code segment relocatable code
 			LXI		SP, TOPSTACK	; set up the user's stack 
 			ENDM
 			
