@@ -3,8 +3,8 @@ NAME	('USERSTACK')
 TITLE	Create user's stack
 
 DSEG
-			DS		64				; 64 bytes of stack space
-USTACK::	DB		0				
+		DS	64				; 64 bytes of stack space
+USTACK::	DB	0				
 			
-			END
+		END
 			
