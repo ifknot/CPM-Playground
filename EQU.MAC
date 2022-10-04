@@ -1,11 +1,13 @@
+;
+.8080
 NAME   	('EQUATES')
 TITLE   Global Equates
 
 PUBLIC  CR,LF,RCONF,WCONF,RBOOT,BDOS,TPA
 
 SUBTTL  ASCII characters
-CR		EQU		0DH		; carriage return
-LF		EQU		0AH		; line feed
+CR	EQU		0DH		; carriage return
+LF	EQU		0AH		; line feed
 CTRLZ	EQU		1AH		; user interrupt
 
 SUBTTL	CP/M BDOS functions
@@ -15,7 +17,7 @@ WCONF 	EQU		2		; write A register to CON:
 SUBTTL	CP/M addresses
 RBOOT	EQU		0		; re-boot to CP/m system
 BDOS	EQU		5		; system entry point for BDOS
-TPA		EQU		100H	; transient program area
+TPA	EQU		100H		; transient program area
 
-		END
+	END
 		
