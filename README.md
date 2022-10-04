@@ -1,5 +1,5 @@
 # CP/M-Playground
-![retro-pc](https://github.com/ifknot/CPM-Playground/blob/main/images/vector-graphics-vector-3-128x128.png)
+![retro-pc]()
 
 My experiments in CP/M 8080 assembly language programming using MASM-80 on a Z80 emulator running CP/M 2.2
 ## RUN CP/M
