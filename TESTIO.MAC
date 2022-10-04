@@ -1,10 +1,10 @@
 .8080
 TITLE	Unit tests for CPMIO
-INCLUDE	MIO.MAC					; macros for the I/O routines
+INCLUDE	STDIO.MAC					; macros for the I/O routines
 
-MAIN::		mUSTACK	64			; set up the user's stack 
-			mPCHAR	'X'
-			JMP		RBOOT##
+MAIN::		setstack	64			; set up the user's stack 
+			putchar		'X'
+			exit 		0
 			
 			END		MAIN
 			

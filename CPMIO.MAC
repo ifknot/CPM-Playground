@@ -4,15 +4,16 @@ NAME	('CPMIO')
 TITLE	CP/M I/O subroutines 04 October 2022
 CSEG
 SUBTTL	print ASCII character in register A to console
+
 PCHR::		PUSH	BC		; preserve registers
-		PUSH 	DE		
+			PUSH 	DE		
 
-		MVI	C, WCONF##
-		MOV	E, A
-		CALL	BDOS##
+			MVI		C, WCONF##
+			MOV		E, A
+			CALL	BDOS##
 
-		POP	DE		; restore registers
-		POP	BC
+			POP		DE		; restore registers
+			POP		BC
 
-		RET			
-		END
+			RET			
+			END
