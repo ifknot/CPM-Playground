@@ -12,6 +12,8 @@ You can:
 + Copy files in and out of the environment (with the cpmfs tool).
 + Change disks at any point.
 
+[My repository for minimal RUN CP/M and instructions](https://github.com/ifknot/CPM-emulator)
+
 ## MASM-80 Microsoft Utility Software:
 + MACRO-80 Assembler
 + LINK-80 Linking Loader
