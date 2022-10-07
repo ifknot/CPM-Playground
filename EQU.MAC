@@ -23,8 +23,8 @@ CPMVERF		EQU		12		; return version number in HL
 ; BDOS Serial Services
 ; Provide the ability to access the logical serial devices under CPM.
 ; The logical serial devices can also be mapped to the physical hardware serial devices using set IOBYTE.
-RCONF		EQU		1		; read CON: into A register
-WCONF 		EQU		2		; write A register to CON:
+RCONF		EQU		1		; Console (CON) read byte with echo
+WCONF 		EQU		2		; Console (CON) write byte
 
 ; CP/M addresses
 ; Jumping to 0 is deprecated in favour of using the BDOS System Reset function 0

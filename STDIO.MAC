@@ -13,6 +13,10 @@ putchar		MACRO 	ch
 			MVI		A, ch
 			CALL	PCHR##
 			ENDM
+			
+getchar		MACRO 	
+			CALL	GCHR##
+			ENDM
 
 ; Sets up a user stack of specified size	
 ; Parameters:
