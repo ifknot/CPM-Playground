@@ -1,4 +1,6 @@
-; Register preserving wrapper functions for safe and consistent access to BDOS.
+{
+    "*.mac": "Monokai"
+}; Register preserving wrapper functions for safe and consistent access to BDOS.
 ; Dogma: Only registers A & HL are corrupted
 ; register A is used for single byte arguements and return vlaues
 ; register HL is used to access all other arguements and return values via the descirbed memory structures
