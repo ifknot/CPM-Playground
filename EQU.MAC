@@ -1,23 +1,36 @@
 ;
 .8080
-NAME   	('EQUATES')
+NAME   		('EQUATES')
 TITLE   Global Equates
 
-PUBLIC  CR,LF,RCONF,WCONF,REBOOT,BDOS,TPA
+PUBLIC  CR,LF,CTRLZ
+PUBLIC 	RESETF,CPMVERF
+PUBLIC	RCONF,WCONF
+PUBLIC 	BDOS,TPA
 
-SUBTTL  ASCII characters
-CR		EQU		0DH		; carriage return
-LF		EQU		0AH		; line feed
-CTRLZ	EQU		1AH		; user interrupt
+;ASCII characters
+CR			EQU		0DH		; carriage return
+LF			EQU		0AH		; line feed
+CTRLZ		EQU		1AH		; user interrupt
 
-SUBTTL	CP/M BDOS functions
-RCONF	EQU		1		; read CON: into A register
-WCONF 	EQU		2		; write A register to CON:
+; BDOS System Services
+; Provide the ability to terminate and resart CPM as well as check the version of the CPM operating system.
+RESETF		EQU		0 		; returns control to the CP/M operating system at the CCP level.
+CPMVERF		EQU		12		; return version number in HL
+							; H = 00 designating the CP/M release (H = 01 for MP/M)
+							; L = 00 for all releases previous to 2.0. CP/M 2.0 returns a hexadecimal 20 in register L, with subsequent version 2 releases in the hexadecimal range 21, 22, through 2F. 
 
-SUBTTL	CP/M addresses
-REBOOT	EQU		0		; re-boot to CP/m system
-BDOS	EQU		5		; system entry point for BDOS
-TPA		EQU		100H	; transient program area
+; BDOS Serial Services
+; Provide the ability to access the logical serial devices under CPM.
+; The logical serial devices can also be mapped to the physical hardware serial devices using set IOBYTE.
+RCONF		EQU		1		; read CON: into A register
+WCONF 		EQU		2		; write A register to CON:
 
-		END
+; CP/M addresses
+; Jumping to 0 is deprecated in favour of using the BDOS System Reset function 0
+;REBOOT	EQU		0		; re-boot to CP/m system
+BDOS		EQU		5		; system entry point for BDOS
+TPA			EQU		100H	; transient program area
+
+			END
 		

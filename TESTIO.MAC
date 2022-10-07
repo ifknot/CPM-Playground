@@ -3,7 +3,7 @@ TITLE	Unit tests for CPMIO
 INCLUDE	STDIO.MAC					; macros for the I/O routines
 
 MAIN::		setstack	64			; set up the user's stack 
-			putchar		'X'			; print X on CON:
+			putchar		'A'			; print X on CON:
 			exit 		0			; exit success
 			
 			END			MAIN		; *specifies the start address of the program to LINK-80*

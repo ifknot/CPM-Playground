@@ -1,9 +1,27 @@
-; 
+; Register preserving wrapper functions for safe and consistent access to BDOS.
+; Dogma: Only registers A & HL are corrupted
+; register A is used for single byte arguements and return vlaues
+; register HL is used to access all other arguements and return values via the descirbed memory structures
+
 .8080						; accept only 8080 opcodes
-NAME	('CPMIO')			; set the module name (overrides title) *only the first 6 characters are significant*
-TITLE	CP/M I/O subroutines 04 October 2022
-SUBTTL	print ASCII character in register A to console
+
+NAME	('CPMIO')			; set the module name (overrides title) 
+							; *only the first 6 characters are significant*
+							
+TITLE	CP/M I/O subroutines 04 October 
+
 CSEG						; code segment relocatable code
+
+; Return control to the CP/M operating system at the CCP level.
+RESET::		PUSH 	BC		; preserve registers
+
+			MVI 	C, RESETF##		
+			CALL	BDOS##	; NB the double hash indicates to M80 an external name
+			
+			POP 	BC		; restore registers
+			RET
+			
+; Print ASCII character in register A to console device CON:
 PCHR::		PUSH	BC		; preserve registers
 			PUSH 	DE		
 
@@ -13,6 +31,6 @@ PCHR::		PUSH	BC		; preserve registers
 
 			POP		DE		; restore registers
 			POP		BC
-
-			RET			
+			RET		
+			
 			END

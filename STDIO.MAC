@@ -36,5 +36,5 @@ exit		MACRO 	err
 			MVI 	A, err
 			ADI 	'0'				; convert to ASCII
 			CALL 	PCHR##
-			JMP		REBOOT##
+			CALL 	RESET##
 			ENDM
