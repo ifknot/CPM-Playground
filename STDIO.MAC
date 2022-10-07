@@ -13,9 +13,16 @@ putchar		MACRO 	ch
 			MVI		A, ch
 			CALL	PCHR##
 			ENDM
-			
+
+;			
 getchar		MACRO 	
 			CALL	GCHR##
+			ENDM
+
+; Write carriage return and linefeed to console device
+crlf		MACRO
+			putchar		CR##
+			putchar		LF##
 			ENDM
 
 ; Sets up a user stack of specified size	
