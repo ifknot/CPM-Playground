@@ -19,3 +19,13 @@ You can:
 + LINK-80 Linking Loader
 + LIB-80 Library Manager
 + CREF Cross-referencing tool
+
+Here is a simple flow chart:
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
