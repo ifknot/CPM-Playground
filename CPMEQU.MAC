@@ -8,7 +8,7 @@ PUBLIC 	RESETF,CPMVERF
 PUBLIC	RCONF,WCONF
 PUBLIC 	BDOS,TPA
 
-;ASCII characters
+; ASCII characters
 CR			EQU		0DH		; carriage return
 LF			EQU		0AH		; line feed
 CTRLZ		EQU		1AH		; user interrupt

@@ -3,10 +3,26 @@ TITLE	Unit tests for CPMIO
 INCLUDE	STDIO.MAC					; macros for the I/O routines
 
 MAIN::		setstack	64			; set up the user's stack 
-			getchar
+			LXI			HL, VRAM##
+			CALL		PDHEX##
 			crlf
-			PCHR##
-			putchar		'B'			; print X on CON:
+			MVI 		B, 0 
+LOOP:		MOV			M, B
+			INR			B
+			INX			HL
+			;CALL 		PDHEX##
+			;putchar		'='
+			;MOV			A, B
+			;CALL 		PCHR##
+			;crlf
+			MOV			A, H
+			CPI			0F7H
+			JNZ			LOOP
+			MOV			A, L
+			CPI			0FFH
+			JNZ			LOOP
+			CALL 		PDHEX##
+			crlf
 			exit 		0			; exit success
 			
 			END			MAIN		; *specifies the start address of the program to LINK-80*

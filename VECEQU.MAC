@@ -1,0 +1,23 @@
+; Vector Graphic Vector 3 Computer Equates
+; Flashwriter II graphics board has a 2K block of VRAM from F000H - F7FFH with the first location in VRAM corresponding to the top-left corner and progressing left to right and top to bottom.
+; The Flashwriter II graphics board ships with a character ROM containing:
+;	00H - 1FH	extra 32 'graphics' character codes  
+;	20H	- 7FH	ASCII characters
+; Assuming the board is jumpered for reverse video (as shipped) so bit 8 set
+; 	80H - 9FH 	reverse video versions of graphics characters 00H - 1FH
+; 	0AH - FFH 	reverse video ASCII characters
+; NB.1 The screen is 80x24 = 1920 character locations so the last 128 bytes of VRAM are unused.
+; NB.2 It is possible to change the location of the VRAM.
+; NB.3 It is possible to create own character sets (custom ones could be ordered Vector Graphic)
+.8080
+NAME ('VECEQUATES')
+TITLE Global Vector 3 Equates
+
+PUBLIC  VRAM, VRAMEND, REVERSE
+
+; Flashwriter II 
+VRAM	EQU 	0F000H
+VRAMEND	EQU 	0F7FFH
+REVERSE	EQU		80H
+
+		END

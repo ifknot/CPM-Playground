@@ -1,0 +1,27 @@
+; Vector Graphic Vector 3 direct screen memory functions
+.8080
+
+NAME	('VECIO')			; set the module name (overrides title) 
+							; *only the first 6 characters are significant*
+							
+TITLE	Vector Graphic I/O subroutines 08 October 
+
+DSEG
+; private
+CURSOR::	DW		VRAM##	; The current memory location of the cursor
+CURSON::	DB		1		; 1 = cursor visible 0 = cursor not visible
+CURSCHR::	DB		'_'
+
+CSEG
+
+; Print ASCII character in register A to VRAM at current cursor loaction and advance cursor to next location
+VPCHR::		PUSH	HL
+
+			LHLD	CURSOR
+			MOV		M, A
+
+			POP		HL
+			RET
+			
+			END
+			

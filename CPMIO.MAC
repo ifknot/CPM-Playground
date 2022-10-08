@@ -2,7 +2,6 @@
 ; Dogma: Only registers A & HL are corrupted
 ; register A is used for single byte arguements and return vlaues
 ; register HL is used to access all other arguements and return values via the descirbed memory structures
-
 .8080						; accept only 8080 opcodes
 
 NAME	('CPMIO')			; set the module name (overrides title) 
@@ -26,24 +25,67 @@ RESET::		PUSH 	BC		; preserve registers
 ; Tab characters, CTRL-I, move the cursor to the next tab stop.
 ; A check is made for start/stop scroll, CTRL-S, and start/stop printer echo, CTRL-P. 
 ; The FDOS does not return to the calling program until a character has been typed, thus suspending execution if a character is not ready.
-GCHR::		PUSH	BC		; preserve registers	
+GCHR::		PUSH	BC		
 
 			MVI		C, RCONF##	
 			CALL	BDOS##
 	
-			POP		BC		; restore registers
+			POP		BC		
 			RET		
 ; Print ASCII character in register A to console device CON:
 ; As in GCHR, tabs are expanded and checks are made for start/stop scroll and printer echo.
-PCHR::		PUSH	BC		; preserve registers
-			PUSH 	DE		
+PCHR::		PUSH	BC		
+			PUSH 	DE
+			PUSH	HL
 
 			MVI		C, WCONF##	
 			MOV		E, A
 			CALL	BDOS##
 
+			POP		HL
 			POP		DE		
-			POP		BC		; restore registers
-			RET		
+			POP		BC		
+			RET	
 			
+; Print the hexadecimal value of register A to CON:			
+PHEX::		PUSH	BC
+			PUSH	HL
+
+			MOV		B, A	; copy A then process high nybble
+			RRC				; 8080 has no shift instruction
+			RRC				; Only rotate instructions. 
+			RRC				; So to shift high nybble right 4 places,
+			RRC				; rotate right four places and then 
+			ANI 	0FH		; mask the low 4 bits
+			ADI		'0'		; convert to ASCII
+			CPI		':'		; ASCII 9 or less?
+			JC		HIDIGIT
+			ADI		7		; convert to hex characters A..F
+HIDIGIT:	CALL	PCHR	; print the high nybble
+			MOV 	A, B	; restore A then process low nybble
+			ANI 	0FH		; mask the low nybble 4 bits
+			ADI		'0'		; convert to ASCII
+			CPI		':'		; ASCII 9 or less?
+			JC		LODIGIT
+			ADI		7		; convert to hex characters A..F
+LODIGIT:	CALL	PCHR	; print the low nybble		
+
+			POP 	HL
+			POP		BC
+			RET
+
+; Print the hexadecimal value of register HL to CON:
+PDHEX::		MOV 	A, H
+			CALL	PHEX
+			MOV 	A, L
+			CALL	PHEX
+			
+; Print the binary value of register A to CON:
+PBIN::		PUSH	BC
+			
+			
+			
+			POP		BC
+			RET
+		
 			END

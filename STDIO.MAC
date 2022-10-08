@@ -3,7 +3,7 @@
 NAME ('STDIO')
 TITLE C-like macros for the I/O subroutines
 
-; Writes a character to the CP/M logical device CON:
+; Writes a character to the console device
 ; Parameters:
 ;	ch - ASCII byte character to be written
 ; Return value in A register:
@@ -14,7 +14,9 @@ putchar		MACRO 	ch
 			CALL	PCHR##
 			ENDM
 
-;			
+; Get a character from the console device into register A	
+; Return value in A register:
+;	ASCII value character in keyboard buffer		
 getchar		MACRO 	
 			CALL	GCHR##
 			ENDM
@@ -24,7 +26,29 @@ crlf		MACRO
 			putchar		CR##
 			putchar		LF##
 			ENDM
+			
+; Prints the hex value of its BYTE argument 
+printhex	MACRO	num
+			MVI 	A, num
+			CALL	PHEX##
+			ENDM
 
+; Prints the hex value of its WORD argument 
+printdhex	MACRO	num
+			LXI		HL, num
+			CALL	PDHEX##
+			ENDM			
+			
+; Prints the hex value of its argument 
+;printbin	MACRO	num
+;			CALL	PBIN##
+;			ENDM
+			
+; Prints the hex value of its argument 
+;printdec	MACRO	num
+;			CALL	PDEC##
+;			ENDM
+			
 ; Sets up a user stack of specified size	
 ; Parameters:
 ;	size - the numbers of bytes to reserve for the user stack space
