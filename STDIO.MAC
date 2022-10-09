@@ -5,12 +5,14 @@ TITLE C-like macros for the I/O subroutines
 
 ; Writes a character to the console device
 ; Parameters:
-;	ch - ASCII byte character to be written
+;	ch - optional ASCII byte character to be written
 ; Return value in A register:
 ; 	On success, returns the written character.
 ;	On failure, returns EOF
 putchar		MACRO 	ch
-			MVI		A, ch
+			IFNB <ch>			; if ch is not blank
+				MVI		A, ch	; ch->A
+			ENDIF				
 			CALL	PCHR##
 			ENDM
 
@@ -27,28 +29,30 @@ crlf		MACRO
 			putchar		LF##
 			ENDM
 			
-; Prints the hex value of its BYTE argument 
+; Prints the hex value of its optional BYTE argument num or A
 printhex	MACRO	num
-			MVI 	A, num
+			IFNB	<num>	
+				MVI 	A, num
+			ENDIF
 			CALL	PHEX##
 			ENDM
 
-; Prints the hex value of its WORD argument 
+; Prints the hex value of its optional WORD argument num or HL
 printdhex	MACRO	num
-			LXI		HL, num
+			IFNB	<num>
+				LXI		HL, num
+			ENDIF
 			CALL	PDHEX##
 			ENDM			
 			
 ; Prints the hex value of its argument 
-;printbin	MACRO	num
-;			CALL	PBIN##
-;			ENDM
-			
-; Prints the hex value of its argument 
-;printdec	MACRO	num
-;			CALL	PDEC##
-;			ENDM
-			
+printbin	MACRO	num
+			IFNB	<num>	
+				MVI 	A, num
+			ENDIF
+			CALL	PBIN##
+			ENDM
+						
 ; Sets up a user stack of specified size	
 ; Parameters:
 ;	size - the numbers of bytes to reserve for the user stack space
@@ -64,12 +68,10 @@ TOPSTACK:	DB		0				; top of the user stack
 			
 ; Exits back to the command-line processor (CCP) 
 ; Parameters:
-;	err - an error code or 0 on success
+;	err - a BYTE error code or 0 on success
 ; Return value:
 ; 	The err value is converted to ASCI and sent to CON:
 exit		MACRO 	err
-			MVI 	A, err
-			ADI 	'0'				; convert to ASCII
-			CALL 	PCHR##
+			printhex	err
 			CALL 	RESET##
 			ENDM

@@ -3,25 +3,11 @@ TITLE	Unit tests for CPMIO
 INCLUDE	STDIO.MAC					; macros for the I/O routines
 
 MAIN::		setstack	64			; set up the user's stack 
-			LXI			HL, VRAM##
-			CALL		PDHEX##
+			printhex	0FEH
+			crlf			
+			printdhex 	0DEADH
 			crlf
-			MVI 		B, 0 
-LOOP:		MOV			M, B
-			INR			B
-			INX			HL
-			;CALL 		PDHEX##
-			;putchar		'='
-			;MOV			A, B
-			;CALL 		PCHR##
-			;crlf
-			MOV			A, H
-			CPI			0F7H
-			JNZ			LOOP
-			MOV			A, L
-			CPI			0FFH
-			JNZ			LOOP
-			CALL 		PDHEX##
+			printbin 	10101100B
 			crlf
 			exit 		0			; exit success
 			

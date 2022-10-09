@@ -2,22 +2,22 @@
 ; Dogma: Only registers A & HL are corrupted
 ; register A is used for single byte arguements and return vlaues
 ; register HL is used to access all other arguements and return values via the descirbed memory structures
-.8080						; accept only 8080 opcodes
+.8080							; accept only 8080 opcodes
 
-NAME	('CPMIO')			; set the module name (overrides title) 
-							; *only the first 6 characters are significant*
+NAME	('CPMIO')				; set the module name (overrides title) 
+								; *only the first 6 characters are significant*
 							
 TITLE	CP/M I/O subroutines 04 October 
 
-CSEG						; code segment relocatable code
+CSEG							; code segment relocatable code
 
 ; Return control to the CP/M operating system at the CCP level.
-RESET::		PUSH 	BC		; preserve registers
+RESET::		PUSH 	BC			; preserve registers
 
 			MVI 	C, RESETF##		
-			CALL	BDOS##	; NB the double hash indicates to M80 an external name
+			CALL	BDOS##		; NB the double hash indicates to M80 an external name
 			
-			POP 	BC		; restore registers
+			POP 	BC			; restore registers
 			RET
 
 ; Get ASCII character from console device CON in register A (with echo)	
@@ -37,7 +37,7 @@ GCHR::		PUSH	BC
 PCHR::		PUSH	BC		
 			PUSH 	DE
 			PUSH	HL
-
+			
 			MVI		C, WCONF##	
 			MOV		E, A
 			CALL	BDOS##
@@ -50,41 +50,63 @@ PCHR::		PUSH	BC
 ; Print the hexadecimal value of register A to CON:			
 PHEX::		PUSH	BC
 			PUSH	HL
-
-			MOV		B, A	; copy A then process high nybble
-			RRC				; 8080 has no shift instruction
-			RRC				; Only rotate instructions. 
-			RRC				; So to shift high nybble right 4 places,
-			RRC				; rotate right four places and then 
-			ANI 	0FH		; mask the low 4 bits
-			ADI		'0'		; convert to ASCII
-			CPI		':'		; ASCII 9 or less?
+			PUSH 	PSW
+			
+			MOV		B, A		; copy A then process high nybble
+			RRC					; 8080 has no shift instruction
+			RRC					; Only rotate instructions. 
+			RRC					; So to shift high nybble right 4 places,
+			RRC					; rotate right four places and then 
+			ANI 	0FH			; mask the low 4 bits
+			ADI		'0'			; convert to ASCII
+			CPI		':'			; ASCII 9 or less?
 			JC		HIDIGIT
-			ADI		7		; convert to hex characters A..F
-HIDIGIT:	CALL	PCHR	; print the high nybble
-			MOV 	A, B	; restore A then process low nybble
-			ANI 	0FH		; mask the low nybble 4 bits
-			ADI		'0'		; convert to ASCII
-			CPI		':'		; ASCII 9 or less?
+			ADI		7			; convert to hex characters A..F
+HIDIGIT:	CALL	PCHR		; print the high nybble
+			MOV 	A, B		; restore A then process low nybble
+			ANI 	0FH			; mask the low nybble 4 bits
+			ADI		'0'			; convert to ASCII
+			CPI		':'			; ASCII 9 or less?
 			JC		LODIGIT
-			ADI		7		; convert to hex characters A..F
-LODIGIT:	CALL	PCHR	; print the low nybble		
+			ADI		7			; convert to hex characters A..F
+LODIGIT:	CALL	PCHR		; print the low nybble		
 
+			POP 	PSW
 			POP 	HL
 			POP		BC
 			RET
 
 ; Print the hexadecimal value of register HL to CON:
-PDHEX::		MOV 	A, H
+PDHEX::		PUSH	PSW
+
+			MOV 	A, H
 			CALL	PHEX
 			MOV 	A, L
 			CALL	PHEX
 			
+			POP		PSW
+			RET
+			
 ; Print the binary value of register A to CON:
 PBIN::		PUSH	BC
+			PUSH	DE
+			PUSH	PSW
 			
+			MVI		D, 8
+BDIGIT:		RAL		
+			JNC		BZERO		
+			MVI		E, '1'
+			JMP		BCHR
+BZERO:		MVI		E, '0'
+BCHR:		MVI		C, WCONF##	
+			PUSH 	PSW
+			CALL	BDOS##	
+			POP 	PSW
+			DCR		D
+			JNZ		BDIGIT
 			
-			
+			POP		PSW
+			POP 	DE
 			POP		BC
 			RET
 		
