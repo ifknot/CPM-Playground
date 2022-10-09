@@ -40,7 +40,7 @@ PCHR::		PUSH	BC
 			
 			MVI		C, WCONF##	
 			MOV		E, A
-			CALL	BDOS##
+			CALL	BDOS##		; destroys HL
 
 			POP		HL
 			POP		DE		
@@ -108,6 +108,21 @@ BCHR:		MVI		C, WCONF##
 			POP		PSW
 			POP 	DE
 			POP		BC
+			RET
+		
+; print the zero terminated string HL to CON:
+PZSTR::		PUSH 	HL
+			PUSH 	PSW
+
+PZLOOP:		MOV 	A, M
+			CPI		0
+			JZ		PZEND
+			CALL	PCHR
+			INX 	HL
+			JMP		PZLOOP
+			
+PZEND:		POP		PSW
+			POP		HL
 			RET
 		
 			END

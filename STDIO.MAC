@@ -52,7 +52,16 @@ printbin	MACRO	num
 			ENDIF
 			CALL	PBIN##
 			ENDM
-						
+			
+;
+printzstr	MACRO 	label,string
+			LXI		HL, label
+			CALL	PZSTR##
+DSEG	; let the linker relocate the zero terminated string
+label:		string, 0
+CSEG	; restore everything following to relocatable code segment	
+			ENDM
+			
 ; Sets up a user stack of specified size	
 ; Parameters:
 ;	size - the numbers of bytes to reserve for the user stack space

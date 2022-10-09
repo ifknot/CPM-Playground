@@ -2,14 +2,28 @@
 TITLE	Unit tests for CPMIO
 INCLUDE	STDIO.MAC					; macros for the I/O routines
 
+DSEG
+zstr:		DB 'hello',0
+
+CSEG
 MAIN::		setstack	64			; set up the user's stack 
+			printdhex 	0ABCDH
+			putchar		'H'
+			crlf
+			printdhex
+			crlf
 			printhex	0FEH
 			crlf			
 			printdhex 	0DEADH
 			crlf
 			printbin 	10101100B
 			crlf
+			LXI			HL, zstr
+			CALL		PZSTR##
+			crlf
+			printzstr	l1,'world'
+			crlf
 			exit 		0			; exit success
-			
+
 			END			MAIN		; *specifies the start address of the program to LINK-80*
 			
