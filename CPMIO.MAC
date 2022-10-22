@@ -9,15 +9,17 @@ NAME	('CPMIO')				; set the module name (overrides title)
 							
 TITLE	CP/M I/O subroutines 04 October 
 
+INCLUDE	EXTEND.MAC				; macros to extend the 8080's limited instruction set
+
 CSEG							; code segment relocatable code
 
 ; Return control to the CP/M operating system at the CCP level.
-RESET::		PUSH 	BC			; preserve registers
+RESET::		PUSHA				; preserve registers
 
 			MVI 	C, RESETF##		
 			CALL	BDOS##		; NB the double hash indicates to M80 an external name
 			
-			POP 	BC			; restore registers
+			POPA 				; restore registers
 			RET
 
 ; Get ASCII character from console device CON in register A (with echo)	
@@ -25,32 +27,26 @@ RESET::		PUSH 	BC			; preserve registers
 ; Tab characters, CTRL-I, move the cursor to the next tab stop.
 ; A check is made for start/stop scroll, CTRL-S, and start/stop printer echo, CTRL-P. 
 ; The FDOS does not return to the calling program until a character has been typed, thus suspending execution if a character is not ready.
-GCHR::		PUSH	BC		
+GCHR::		PUSHA		
 
 			MVI		C, RCONF##	
 			CALL	BDOS##
 	
-			POP		BC		
+			POPA		
 			RET		
 ; Print ASCII character in register A to console device CON:
 ; As in GCHR, tabs are expanded and checks are made for start/stop scroll and printer echo.
-PCHR::		PUSH	BC		
-			PUSH 	DE
-			PUSH	HL
+PCHR::		PUSHA
 			
 			MVI		C, WCONF##	
 			MOV		E, A
 			CALL	BDOS##		; destroys HL
 
-			POP		HL
-			POP		DE		
-			POP		BC		
+			POPA		
 			RET	
 			
 ; Print the hexadecimal value of register A to CON:			
-PHEX::		PUSH	BC
-			PUSH	HL
-			PUSH 	PSW
+PHEX::		PUSHA
 			
 			MOV		B, A		; copy A then process high nybble
 			RRC					; 8080 has no shift instruction
@@ -71,26 +67,22 @@ HIDIGIT:	CALL	PCHR		; print the high nybble
 			ADI		7			; convert to hex characters A..F
 LODIGIT:	CALL	PCHR		; print the low nybble		
 
-			POP 	PSW
-			POP 	HL
-			POP		BC
+			POPA
 			RET
 
 ; Print the hexadecimal value of register HL to CON:
-PDHEX::		PUSH	PSW
+PDHEX::		PUSHA
 
 			MOV 	A, H
 			CALL	PHEX
 			MOV 	A, L
 			CALL	PHEX
 			
-			POP		PSW
+			POPA
 			RET
 			
 ; Print the binary value of register A to CON:
-PBIN::		PUSH	BC
-			PUSH	DE
-			PUSH	PSW
+PBIN::		PUSHA
 			
 			MVI		D, 8
 BDIGIT:		RAL		
@@ -105,14 +97,23 @@ BCHR:		MVI		C, WCONF##
 			DCR		D
 			JNZ		BDIGIT
 			
-			POP		PSW
-			POP 	DE
-			POP		BC
+			POPA
 			RET
 		
+; Print the binary value of register HL to CON:
+PDBIN::		PUSHA
+
+			MOV 	A, H
+			CALL	PBIN
+			MOV 	A, L
+			CALL	PBIN
+			
+			POPA
+			RET
+		
+		
 ; print the zero terminated string HL to CON:
-PZSTR::		PUSH 	HL
-			PUSH 	PSW
+PZSTR::		PUSHA
 
 PZLOOP:		MOV 	A, M
 			CPI		0
@@ -121,8 +122,7 @@ PZLOOP:		MOV 	A, M
 			INX 	HL
 			JMP		PZLOOP
 			
-PZEND:		POP		PSW
-			POP		HL
+PZEND:		POPA
 			RET
 		
 			END

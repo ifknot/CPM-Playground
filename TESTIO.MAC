@@ -1,27 +1,20 @@
 .8080
 TITLE	Unit tests for CPMIO
 INCLUDE	STDIO.MAC					; macros for the I/O routines
+INCLUDE	EXTEND.MAC					; macros to extend the 8080's limited instruction set
 
 DSEG
 zstr:		DB 'hello',0
 
 CSEG
 MAIN::		setstack	64			; set up the user's stack 
-			printdhex 	0ABCDH
-			putchar		'H'
-			crlf
-			printdhex
-			crlf
-			printhex	0FEH
+			LXI 		HL, 0101010111111111B
+			printdbin
 			crlf			
-			printdhex 	0DEADH
-			crlf
-			printbin 	10101100B
-			crlf
-			LXI			HL, zstr
-			CALL		PZSTR##
-			crlf
-			printzstr	l1,'world'
+			SHL
+			SHL
+			SHL
+			printdbin
 			crlf
 			exit 		0			; exit success
 

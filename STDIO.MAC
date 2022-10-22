@@ -11,9 +11,13 @@ TITLE C-like macros for the I/O subroutines
 ;	On failure, returns EOF
 putchar		MACRO 	ch
 			IFNB <ch>			; if ch is not blank
+				PUSH 	PSW
 				MVI		A, ch	; ch->A
 			ENDIF				
 			CALL	PCHR##
+			IFNB	<ch>
+				POP		PSW
+			ENDIF
 			ENDM
 
 ; Get a character from the console device into register A	
@@ -32,31 +36,57 @@ crlf		MACRO
 ; Prints the hex value of its optional BYTE argument num or A
 printhex	MACRO	num
 			IFNB	<num>	
+				PUSH 	HL
 				MVI 	A, num
 			ENDIF
 			CALL	PHEX##
+			IFNB	<num>
+				POP		HL
+			ENDIF
 			ENDM
 
 ; Prints the hex value of its optional WORD argument num or HL
 printdhex	MACRO	num
 			IFNB	<num>
+				PUSH 	HL
 				LXI		HL, num
 			ENDIF
 			CALL	PDHEX##
+			IFNB	<num>
+				POP		HL
+			ENDIF
 			ENDM			
 			
-; Prints the hex value of its argument 
+; Prints the binary value of its optional BYTE argument num or A
 printbin	MACRO	num
 			IFNB	<num>	
+				PUSH	PSW
 				MVI 	A, num
 			ENDIF
 			CALL	PBIN##
+			IFNB	<num>	
+				POP 	PSW
+			ENDIF
 			ENDM
-			
-;
+
+; Prints the binary value of its optional WORD argument num or HL	
+printdbin	MACRO	num
+			IFNB	<num>
+				PUSH 	HL
+				LXI		HL, num
+			ENDIF
+			CALL	PDBIN##
+			IFNB	<num>
+				POP		HL
+			ENDIF
+			ENDM		
+
+; Prints the zero terminated string at <label> builds the data <label: string,0>
 printzstr	MACRO 	label,string
+			PUSH	HL
 			LXI		HL, label
 			CALL	PZSTR##
+			POP 	HL
 DSEG	; let the linker relocate the zero terminated string
 label:		string, 0
 CSEG	; restore everything following to relocatable code segment	

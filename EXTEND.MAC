@@ -1,0 +1,30 @@
+; macros to extend the 8080's limited instruction set
+.8080
+; push all
+PUSHA		MACRO
+			PUSH 	PSW
+			PUSH	BC
+			PUSH	DE
+			PUSH 	HL
+			ENDM
+			
+; pop all
+POPA		MACRO
+			POP		HL
+			POP		DE
+			POP 	BC
+			POP 	PSW
+			ENDM
+			
+; the 8080 does not have any shift operations
+; shift left HL *NOTE: contents of A are corrupted*
+SHL 		MACRO
+			MOV			A, L		; Unfortunately the 8085 does not have a 'clear carry' 
+			STC						; set Carry flag
+			CMC						; complement Carry flag
+			RAL						; rotate left through carry
+			MOV 		L, A
+			MOV 		A, H	
+			RAL						; rotate left through carry
+			MOV 		H, A
+			ENDM 
