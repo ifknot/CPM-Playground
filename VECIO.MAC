@@ -19,7 +19,8 @@ VPCHR::		PUSH	HL
 
 			LHLD	CURSOR
 			MOV		M, A
-
+			INR 	M
+			
 			POP		HL
 			RET
 			

@@ -45,16 +45,23 @@ printhex	MACRO	num
 			ENDIF
 			ENDM
 
-; Prints the hex value of its optional WORD argument num or HL
-printdhex	MACRO	num
-			IFNB	<num>
-				PUSH 	HL
-				LXI		HL, num
+; Prints the hex value of its register pair <hi:lo> to CON:
+; or, if <lo> is undefined treats hi as 16bit immediate value
+printdhex	MACRO	hi,lo
+			PUSHA
+			IFNB	<lo>					
+				MOV 	A, hi
+				CALL	PHEX##
+				MOV 	A, lo
+				CALL	PHEX##
+			ELSE
+				LXI		HL, hi
+				MOV 	A, H
+				CALL	PHEX##
+				MOV 	A, L
+				CALL	PHEX##
 			ENDIF
-			CALL	PDHEX##
-			IFNB	<num>
-				POP		HL
-			ENDIF
+			POPA
 			ENDM			
 			
 ; Prints the binary value of its optional BYTE argument num or A
@@ -69,27 +76,37 @@ printbin	MACRO	num
 			ENDIF
 			ENDM
 
-; Prints the binary value of its optional WORD argument num or HL	
-printdbin	MACRO	num
-			IFNB	<num>
-				PUSH 	HL
-				LXI		HL, num
+; Prints the binary value of its register pair <hi:lo> to CON:
+; or, if <lo> is undefined treats hi as 16bit immediate value
+printdbin	MACRO	hi,lo
+			PUSHA
+			IFNB	<lo>					
+				MOV 	A, hi
+				CALL	PBIN##
+				MOV 	A, lo
+				CALL	PBIN##
+			ELSE
+				LXI		HL, hi
+				MOV 	A, H
+				CALL	PBIN##
+				MOV 	A, L
+				CALL	PBIN##
 			ENDIF
-			CALL	PDBIN##
-			IFNB	<num>
-				POP		HL
-			ENDIF
-			ENDM		
+			POPA
+			ENDM			
+	
 
-; Prints the zero terminated string at <label> builds the data <label: string,0>
+; Prints the zero terminated string at <label>, optionally builds the data <labelz: stringz,0>
 printzstr	MACRO 	label,string
 			PUSH	HL
 			LXI		HL, label
 			CALL	PZSTR##
 			POP 	HL
+			IFNB 	<string>
 DSEG	; let the linker relocate the zero terminated string
 label:		string, 0
 CSEG	; restore everything following to relocatable code segment	
+			ENDIF
 			ENDM
 			
 ; Sets up a user stack of specified size	

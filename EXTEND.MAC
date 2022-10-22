@@ -17,14 +17,14 @@ POPA		MACRO
 			ENDM
 			
 ; the 8080 does not have any shift operations
-; shift left HL *NOTE: contents of A are corrupted*
-SHL 		MACRO
-			MOV			A, L		; Unfortunately the 8085 does not have a 'clear carry' 
+; shift left reg pair <hi:lo> *NOTE: contents of A are corrupted*
+SHL 		MACRO	hi,lo
+			MOV		A, lo			; Unfortunately the 8085 does not have a 'clear carry' 
 			STC						; set Carry flag
 			CMC						; complement Carry flag
 			RAL						; rotate left through carry
-			MOV 		L, A
-			MOV 		A, H	
+			MOV 	lo, A
+			MOV 	A, hi	
 			RAL						; rotate left through carry
-			MOV 		H, A
+			MOV 	hi, A
 			ENDM 

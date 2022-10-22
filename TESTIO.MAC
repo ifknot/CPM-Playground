@@ -4,17 +4,23 @@ INCLUDE	STDIO.MAC					; macros for the I/O routines
 INCLUDE	EXTEND.MAC					; macros to extend the 8080's limited instruction set
 
 DSEG
-zstr:		DB 'hello',0
+zstr:		DB ' hello',0
 
 CSEG
 MAIN::		setstack	64			; set up the user's stack 
-			LXI 		HL, 0101010111111111B
-			printdbin
+			LXI 		HL, 0
+			LXI 		DE, 10
+			printdhex	D,E
 			crlf			
-			SHL
-			SHL
-			SHL
-			printdbin
+			SHL			D,E
+			SHL			D,E
+			SHL			D,E
+			SHL			D,E
+			DAD			DE
+			SHL			H,L
+			SHL			H,L
+			DAD			DE
+			printdhex	H,L
 			crlf
 			exit 		0			; exit success
 

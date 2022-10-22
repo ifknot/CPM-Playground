@@ -70,16 +70,7 @@ LODIGIT:	CALL	PCHR		; print the low nybble
 			POPA
 			RET
 
-; Print the hexadecimal value of register HL to CON:
-PDHEX::		PUSHA
 
-			MOV 	A, H
-			CALL	PHEX
-			MOV 	A, L
-			CALL	PHEX
-			
-			POPA
-			RET
 			
 ; Print the binary value of register A to CON:
 PBIN::		PUSHA
