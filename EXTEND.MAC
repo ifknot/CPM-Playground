@@ -16,15 +16,27 @@ POPA		MACRO
 			POP 	PSW
 			ENDM
 			
-; the 8080 does not have any shift operations
+; the 8080 does not have any 16 bit shift operations (or 8 bit shift operations)
 ; shift left reg pair <hi:lo> *NOTE: contents of A are corrupted*
-SHL 		MACRO	hi,lo
-			MOV		A, lo			; Unfortunately the 8085 does not have a 'clear carry' 
-			STC						; set Carry flag
-			CMC						; complement Carry flag
-			RAL						; rotate left through carry
-			MOV 	lo, A
-			MOV 	A, hi	
-			RAL						; rotate left through carry
-			MOV 	hi, A
+; takes 8 cycles
+SHLD 		MACRO	hi,lo
+			MOV		A, lo			; 1 Unfortunately the 8085 does not have a 'clear carry' 
+			STC						; 1 set Carry flag
+			CMC						; 1 complement Carry flag
+			RAL						; 1 rotate left through carry
+			MOV 	lo, A			; 1
+			MOV 	A, hi			; 1
+			RAL						; 1 rotate left through carry
+			MOV 	hi, A			; 1
+			ENDM 
+			
+; rotate left reg pair <hi:lo> *NOTE: contents of A are corrupted*
+; takes 6 cycles 
+RORD 		MACRO	hi,lo
+			MOV		A, lo			; 1 
+			RAL						; 1 rotate left through carry
+			MOV 	lo, A			; 1
+			MOV 	A, hi			; 1
+			RAL						; 1 rotate left through carry
+			MOV 	hi, A			; 1
 			ENDM 

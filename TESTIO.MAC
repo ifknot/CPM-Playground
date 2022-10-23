@@ -7,20 +7,22 @@ DSEG
 zstr:		DB ' hello',0
 
 CSEG
-MAIN::		setstack	64			; set up the user's stack 
-			LXI 		HL, 0
-			LXI 		DE, 10
-			printdhex	D,E
-			crlf			
-			SHL			D,E
-			SHL			D,E
-			SHL			D,E
-			SHL			D,E
-			DAD			DE
-			SHL			H,L
-			SHL			H,L
-			DAD			DE
-			printdhex	H,L
+MAIN::		setstack	64			; set up the user's stack
+			; calculate the VRAM address of char screen x,y on 80x24 char display 
+			LXI 		HL, 10		; HL y coordinate e.g. 10 x 80 = 800
+			printdhex	H,L			; multiply by 80 = 1010000 
+			crlf					; so 4 SHL (x16), ADD, 2 more SHL (x64)
+			DAD			HL			; (3) x2
+			DAD 		HL			; (3) x4
+			DAD			HL			; (3) x8
+			DAD			HL			; (3) x16
+			MOV			D,H			; (1) temp result DE
+			MOV 		E,L 		; (1)
+			DAD			HL			; (3) x32
+			DAD			HL			; (3) x64	
+			DAD			DE			; (3) add temp result HL
+									; (44 cycles total)
+			printdhex	H,L			; 320H = 800
 			crlf
 			exit 		0			; exit success
 
