@@ -6,26 +6,35 @@ INCLUDE	EXTEND.MAC					; macros to extend the 8080's limited instruction set
 DSEG
 zstr:		DB ' hello',0
 
+VRAM		EQU 	0F000H
+
 CSEG
 MAIN::		setstack	64			; set up the user's stack
 			; calculate the VRAM address of char screen x,y on 80x24 char display 
-			LXI 		HL,0		
-			LXI 		DE,10		; DE y coordinate e.g. 10 x 80 = 800
-			printdhex	D,E			; multiply by 80 = 1010000 
+			LXI 		HL, 10		; HL y coordinate e.g. 10 x 80 = 800
+			printdhex	H,L			; multiply by 80 = 1010000 
 			crlf					; so 4 SHL (x16), ADD, 2 more SHL (x64)
-			ROLD		D,E			; (6) 4 rotates left then...
-			ROLD		D,E			; (6)
-			ROLD		D,E			; (6)
-			ROLD		D,E			; (6)
-			ANI 		L,11110000B	; (2) ...mask off the lower 4 bits
-			DAD			DE			; (3) add temp result HL
-			ROLD		D,E			; (6) 2 rotates left then...
-			ROLD		D,E			; (6)
-			ANI 		L,11111100B	; (2) ...mask off the lower 6 bits
-			DAD 		DE 			; (3) final addition into HL
-									; (53 cycles total)
+			DAD			HL			; (3) x2
+			DAD 		HL			; (3) x4
+			DAD			HL			; (3) x8
+			DAD			HL			; (3) x16
+			MOV			D,H			; (1) temp result DE
+			MOV 		E,L 		; (1)
+			DAD			HL			; (3) x32
+			DAD			HL			; (3) x64	
+			DAD			DE			; (3) add temp DE result to HL
+									; (44 cycles total)
 			printdhex	H,L			; 320H = 800
 			crlf
+			LXI 		DE, 40		; DE x coordinate e.g. 40
+			DAD 		DE			; add the x coord
+			printdhex	H,L			; 348H = 840
+			crlf
+			LXI 		DE, VRAM	; DE is the Vector 3 screen RAM top left hand corner
+			DAD			DE			; HL points to 10th row 40th char screen memory location
+			printdhex	H,L			; 0F348H
+			crlf
+			MVI			M, 'X'		; put an 'X' there
 			exit 		0			; exit success
 
 			END			MAIN		; *specifies the start address of the program to LINK-80*
