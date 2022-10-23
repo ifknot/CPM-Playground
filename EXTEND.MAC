@@ -32,7 +32,7 @@ SHLD 		MACRO	hi,lo
 			
 ; rotate left reg pair <hi:lo> *NOTE: contents of A are corrupted*
 ; takes 6 cycles 
-RORD 		MACRO	hi,lo
+ROLD 		MACRO	hi,lo
 			MOV		A, lo			; 1 
 			RAL						; 1 rotate left through carry
 			MOV 	lo, A			; 1
